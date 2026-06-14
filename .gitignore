@@ -1,0 +1,35 @@
+# Java / Maven
+backend/target/
+*.class
+*.jar
+*.war
+*.ear
+*.log
+.mvn/
+
+# Node / React
+frontend/node_modules/
+frontend/build/
+frontend/.env.local
+frontend/.env.production
+
+# Python
+ai-engine/__pycache__/
+ai-engine/.venv/
+ai-engine/*.pyc
+*.egg-info/
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+
+# Docker
+*.env.docker
+
+# Secrets - NEVER commit these
+.env
+*.pem
+*.key

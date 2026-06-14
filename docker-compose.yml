@@ -1,0 +1,71 @@
+version: '3.9'
+
+services:
+
+  # ── PostgreSQL (local dev only; use Supabase in prod) ──────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: pharmawatch-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: pharmawatch
+      POSTGRES_USER: pharmawatch_user
+      POSTGRES_PASSWORD: pharmawatch_dev_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pharmawatch_user -d pharmawatch"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Spring Boot Backend ────────────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: pharmawatch-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: jdbc:postgresql://postgres:5432/pharmawatch
+      DATABASE_USERNAME: pharmawatch_user
+      DATABASE_PASSWORD: pharmawatch_dev_pass
+      JWT_SECRET: pharmawatch-super-secret-key-minimum-256-bits-long-for-hs256-algorithm
+      FRONTEND_URL: http://localhost:3000
+      CORS_ORIGINS: http://localhost:3000,http://localhost:80
+      # Email - update with real SMTP in production
+      MAIL_HOST: smtp.gmail.com
+      MAIL_PORT: 587
+      MAIL_USERNAME: your-email@gmail.com
+      MAIL_PASSWORD: your-app-password
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # ── React Frontend ─────────────────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_API_URL: http://localhost:8080/api
+    container_name: pharmawatch-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+
+volumes:
+  pgdata:
+    name: pharmawatch_pgdata
