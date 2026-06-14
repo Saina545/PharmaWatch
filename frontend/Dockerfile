@@ -1,16 +1,16 @@
-# ── Stage 1: Build ──────────────────────────────────────────────────────────
-FROM node:18-alpine AS builder
-WORKDIR /app
-COPY package.json ./
-RUN npm install --legacy-peer-deps
-COPY . .
-ARG REACT_APP_API_URL=http://localhost:8080/api
-ENV REACT_APP_API_URL=$REACT_APP_API_URL
-RUN npm run build
+FROM node:16-alpine
 
-# ── Stage 2: Serve with nginx ─────────────────────────────────────────────────
-FROM nginx:1.25-alpine
-COPY --from=builder /app/build /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+WORKDIR /app
+
+COPY package.json ./
+RUN npm install
+
+COPY . .
+
+ENV PORT=80
+ENV WDS_SOCKET_PORT=0
+ENV CHOKIDAR_USEPOLLING=true
+
 EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+
+CMD ["npm", "start"]
