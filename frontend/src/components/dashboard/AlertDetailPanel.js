@@ -62,7 +62,36 @@ export default function AlertDetailPanel({ alert, onClose, onMarkRead }) {
 
   const severity = alert.severity;
   const accentColor = SEVERITY_COLOR[severity] || '#00d4ff';
+  
+ const safeGetDistance = (dateVal) => {
+    try {
+      let parsed = new Date();
+      if (Array.isArray(dateVal)) {
+        parsed = new Date(dateVal[0], (dateVal[1] || 1) - 1, dateVal[2] || 1, dateVal[3] || 0, dateVal[4] || 0, dateVal[5] || 0);
+      } else if (dateVal) {
+        parsed = new Date(dateVal);
+      }
+      if (isNaN(parsed.getTime())) parsed = new Date();
+      return formatDistanceToNow(parsed, { addSuffix: true });
+    } catch (e) {
+      return "Recently";
+    }
+  };
 
+  const safeFormatDate = (dateVal) => {
+    try {
+      let parsed = new Date();
+      if (Array.isArray(dateVal)) {
+        parsed = new Date(dateVal[0], (dateVal[1] || 1) - 1, dateVal[2] || 1, dateVal[3] || 0, dateVal[4] || 0, dateVal[5] || 0);
+      } else if (dateVal) {
+        parsed = new Date(dateVal);
+      }
+      if (isNaN(parsed.getTime())) parsed = new Date();
+      return format(parsed, 'MMM d, yyyy HH:mm');
+    } catch (e) {
+      return "Just now";
+    }
+  };
   return (
     <>
       <div className="panel-overlay" onClick={onClose} />
@@ -96,7 +125,7 @@ export default function AlertDetailPanel({ alert, onClose, onMarkRead }) {
             </div>
             <div className="panel-stat">
               <span className="panel-stat-value">
-                {formatDistanceToNow(new Date(alert.createdAt), { addSuffix: true })}
+             {safeGetDistance(alert.createdAt)}
               </span>
               <span className="panel-stat-label">Detected</span>
             </div>
@@ -156,7 +185,7 @@ export default function AlertDetailPanel({ alert, onClose, onMarkRead }) {
                 <div className="panel-info-item">
                   <span className="panel-info-label">Detected</span>
                   <span className="panel-info-value">
-                    {format(new Date(alert.createdAt), 'MMM d, yyyy HH:mm')}
+                 {safeFormatDate(alert.createdAt)}
                   </span>
                 </div>
               </div>

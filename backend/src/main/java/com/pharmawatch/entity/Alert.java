@@ -8,6 +8,7 @@ import lombok.Builder;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 @Table(name = "alerts")
@@ -47,7 +48,7 @@ public class Alert {
 
     @Column(name = "is_read")
     private boolean read = false;
-
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

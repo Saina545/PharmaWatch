@@ -10,6 +10,7 @@ import ResetPasswordPage from './pages/ResetPasswordPage';
 import DashboardPage from './pages/DashboardPage';
 import WatchlistPage from './pages/WatchlistPage'; // Added import
 import PlaceholderPage from './pages/PlaceholderPage';
+import SearchPage from './pages/SearchPage';
 import './styles/globals.css';
 
 export default function App() {
@@ -41,15 +42,8 @@ export default function App() {
             <ProtectedRoute><WatchlistPage /></ProtectedRoute>
           } />
           
-          <Route path="/analytics" element={
-            <ProtectedRoute>
-              <PlaceholderPage title="Analytics" description="Deep-dive signal trends, time-series graphs, and comparative analysis." />
-            </ProtectedRoute>
-          } />
-          <Route path="/settings" element={
-            <ProtectedRoute>
-              <PlaceholderPage title="Settings" description="Configure alerts, notifications, API keys, and team access." />
-            </ProtectedRoute>
+         <Route path="/search" element={
+            <ProtectedRoute><SearchPage /></ProtectedRoute>
           } />
 
           {/* Default redirects */}

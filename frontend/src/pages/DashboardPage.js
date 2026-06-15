@@ -111,7 +111,7 @@ export default function DashboardPage() {
         <div className="dashboard-header">
           <div>
             <div className="dashboard-greeting">
-              <span className="mono-text greeting-time">// {getTimeOfDay()}</span>
+              <span className="mono-text greeting-time"></span>
             </div>
             <h1 className="dashboard-title">
               Good {getTimeOfDay()}, {user?.firstName}

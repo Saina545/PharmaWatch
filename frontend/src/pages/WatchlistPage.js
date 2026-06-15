@@ -134,7 +134,7 @@ export default function WatchlistPage() {
       <div className="watchlist-content">
         <div className="watchlist-header">
           <div>
-            <span className="mono-text page-eyebrow">// portfolio_watchlist</span>
+            <span className="mono-text page-eyebrow"></span>
             <h1 className="watchlist-title">Drug Watchlist Manager</h1>
             <p className="watchlist-subtitle">
               Manage the compounds your AI engine monitors every night. Changes take effect in the next scheduled scan.

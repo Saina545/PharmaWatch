@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL || 'https://miniature-space-palm-tree-8080.app.github.dev/api';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/api';
 
 const api = axios.create({
   baseURL: API_URL,
@@ -41,6 +41,7 @@ export const dashboardAPI = {
   getAlertDetail: (alertId) => api.get(`/dashboard/alerts/${alertId}`),
   getDrugHistory: (drugName) => api.get(`/dashboard/drugs/${encodeURIComponent(drugName)}/history`),
   markAlertRead: (alertId) => api.patch(`/dashboard/alerts/${alertId}/read`),
+  searchGlobal: (query) => api.get(`/dashboard/search?query=${encodeURIComponent(query)}`),
 };
 
 export const watchlistAPI = {

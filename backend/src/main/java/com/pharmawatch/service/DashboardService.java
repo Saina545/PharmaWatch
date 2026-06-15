@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,10 +20,12 @@ import java.util.stream.Collectors;
 @Slf4j
 public class DashboardService {
 
+    // ALL dependencies grouped at the top for Lombok
     private final AlertRepository alertRepository;
     private final WatchlistDrugRepository watchlistDrugRepository;
     private final UserRepository userRepository;
     private final DataSeederService dataSeederService;
+    private final PubMedService pubMedService; 
 
     @Transactional(readOnly = true)
     public DashboardDTO getDashboardData(String userEmail) {
@@ -36,7 +37,6 @@ public class DashboardService {
 
         long totalDrugs = watchlistDrugRepository.countByCompanyAndActiveTrue(company);
 
-        // MULTI-TENANCY: Only count and fetch alerts for actively watchlisted drugs
         List<Alert> watchlistedAlerts = 
             alertRepository.findByCompanyAndWatchlistedDrugsOrderByCreatedAtDesc(company);
 
@@ -91,7 +91,6 @@ public class DashboardService {
         List<Alert> drugAlerts = 
             alertRepository.findByCompanyAndDrugNameOrderByCreatedAtDesc(company, drugName);
 
-        // Aggregate: group by sideEffect, count occurrences, avg spike
         return drugAlerts.stream()
             .collect(Collectors.groupingBy(Alert::getSideEffect))
             .entrySet().stream()
@@ -102,6 +101,19 @@ public class DashboardService {
                 .build())
             .sorted((a, b) -> Long.compare(b.getCount(), a.getCount()))
             .collect(Collectors.toList());
+    }
+   
+    @Transactional(readOnly = true)
+    public List<DashboardDTO.AlertDTO> searchGlobal(String query) {
+        // 1. Try local database first
+        List<Alert> localResults = alertRepository.searchGlobalAcrossAllData(query);
+        
+        if (!localResults.isEmpty()) {
+            return localResults.stream().map(this::toAlertDTO).collect(Collectors.toList());
+        }
+
+        // 2. If no local results, fetch from PubMed
+        return pubMedService.fetchExternalData(query);
     }
 
     @Transactional

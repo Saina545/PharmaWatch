@@ -85,29 +85,14 @@ export default function DashboardLayout({ children, alertCount }) {
               </svg>
             }
           />
-          <NavItem
-            to="/analytics"
-            active={isActive('/analytics')}
-            label="Analytics"
+         <NavItem
+            to="/search"
+            active={isActive('/search')}
+            label="Global Search"
             icon={
               <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                <polyline points="2,14 6,8 10,11 14,5 16,7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            }
-          />
-        </nav>
-
-        <div className="sidebar-section-label">System</div>
-
-        <nav className="sidebar-nav">
-          <NavItem
-            to="/settings"
-            active={isActive('/settings')}
-            label="Settings"
-            icon={
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                <circle cx="9" cy="9" r="2.5" stroke="currentColor" strokeWidth="1.5"/>
-                <path d="M9 2v1.5M9 14.5V16M2 9h1.5M14.5 9H16M3.5 3.5l1 1M13.5 13.5l1 1M14.5 3.5l-1 1M4.5 13.5l-1 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                <circle cx="8" cy="8" r="5" stroke="currentColor" strokeWidth="1.5"/>
+                <path d="M11.5 11.5L16 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
               </svg>
             }
           />

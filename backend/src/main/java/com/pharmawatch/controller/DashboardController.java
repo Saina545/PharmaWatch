@@ -59,4 +59,15 @@ public class DashboardController {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> searchGlobal(@RequestParam String query) {
+        try {
+            // No authentication required for discovery, triggering wide investigation
+            List<DashboardDTO.AlertDTO> results = dashboardService.searchGlobal(query);
+            return ResponseEntity.ok(results);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
+        }
+    }
 }

@@ -4,6 +4,7 @@ import com.pharmawatch.entity.Alert;
 import com.pharmawatch.entity.Company;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -41,4 +42,10 @@ public interface AlertRepository extends JpaRepository<Alert, Long> {
         ORDER BY a.createdAt DESC
     """)
     List<Alert> findByCompanyAndDrugNameOrderByCreatedAtDesc(Company company, String drugName);
+
+    // GLOBAL SEARCH: Searches across drug names, side effects, and summaries
+    @Query("SELECT a FROM Alert a WHERE " +
+           "(a.drugName ILIKE %:query% OR a.sideEffect ILIKE %:query% OR a.summary ILIKE %:query%) " +
+           "ORDER BY a.createdAt DESC")
+    List<Alert> searchGlobalAcrossAllData(@Param("query") String query);
 }

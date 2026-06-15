@@ -1,358 +1,317 @@
-# PharmaWatch — Drug Safety Signal Intelligence Platform
+# PharmaWatch – Automated Biomedical Intelligence Platform
 
-Automated B2B SaaS for pharmaceutical companies. Every night a cloud script scans new medical papers, uses BioBERT AI to extract side effects, and pushes a prioritized alert feed to your dashboard.
+## Overview
 
----
+PharmaWatch is an AI-powered biomedical intelligence platform designed for pharmaceutical companies to continuously monitor drug-related research and emerging safety signals.
 
-## Tech Stack
+Every day, thousands of clinical and biomedical research papers are published across journals and repositories. Manually reviewing this volume of literature is time-consuming, expensive, and often results in important findings being overlooked.
 
-| Layer      | Technology                                   |
-|------------|----------------------------------------------|
-| Frontend   | React 18 + Recharts + React Router v6        |
-| Backend    | Java 17 + Spring Boot 3 + Spring Security    |
-| Database   | PostgreSQL (Supabase free tier)              |
-| Auth       | JWT (access + refresh tokens) + BCrypt       |
-| AI Engine  | Python + Hugging Face BioBERT                |
-| DevOps     | Docker + Docker Compose + GitHub Actions     |
+PharmaWatch automates the process of collecting, analyzing, and synthesizing biomedical research. Using Natural Language Processing (NLP) and BioBERT-based AI models, the system identifies drug mentions, extracts reported side effects, and generates actionable insights through an interactive dashboard.
+
+Instead of manually reading hundreds of research papers, pharmaceutical companies can maintain a customized watchlist of drugs and receive prioritized alerts, helping them identify emerging safety concerns, monitor competitor drugs, and make evidence-based decisions faster.
 
 ---
 
-## Project Structure
+# Problem Statement
 
+Pharmaceutical organizations face a significant challenge in monitoring newly published biomedical literature.
+
+Thousands of research papers are published every week, making it nearly impossible for safety teams and researchers to manually review every publication. As a result:
+
+* Critical adverse drug reactions may go unnoticed.
+* Newly discovered side effects can remain buried within unstructured text.
+* Pharmacovigilance teams spend excessive time reviewing literature manually.
+* Competitor drug developments can be overlooked.
+* Regulatory and compliance risks increase.
+* Valuable scientific evidence remains underutilized.
+
+An automated system is required to continuously monitor biomedical publications, extract relevant drug-safety information, and provide timely, evidence-based insights.
+
+---
+
+# Motivation
+
+The motivation behind PharmaWatch is to help pharmaceutical companies transform overwhelming volumes of biomedical research into actionable intelligence.
+
+By leveraging Artificial Intelligence and Biomedical NLP, organizations can:
+
+* Monitor drug safety trends automatically.
+* Detect emerging adverse effects earlier.
+* Track competitor drugs and related research.
+* Reduce manual literature review efforts.
+* Improve pharmacovigilance workflows.
+* Support faster, data-driven business decisions.
+
+The project demonstrates how AI-powered knowledge synthesis can improve the efficiency of modern pharmaceutical research and safety monitoring operations.
+
+---
+
+# Key Features
+
+### Secure Authentication
+
+* Corporate user login and registration system.
+* Secure authentication and authorization.
+* Company-specific data isolation.
+
+### Smart Dashboard
+
+* Displays key monitoring metrics.
+* Shows tracked drug statistics.
+* Highlights newly analyzed papers.
+* Displays critical safety alerts.
+
+### Automated Alert Feed
+
+* Prioritized list of significant findings.
+* Detection of unusual side-effect trends.
+* Daily updates based on newly processed research.
+
+### Deep-Dive Analysis Panel
+
+* Detailed investigation view for each alert.
+* Historical side-effect trend visualization.
+* Evidence-backed research summaries.
+* Direct access to original biomedical publications.
+
+### Portfolio Watchlist Management
+
+* Add new drugs to monitor.
+* Remove existing drugs.
+* Manage company-specific tracking portfolios.
+* Monitor competitor medications.
+
+### Global Search System
+
+* Search across all historical biomedical data.
+* Query by drug name.
+* Query by side effect.
+* Apply date-based filtering.
+
+### AI-Powered Information Extraction
+
+* Biomedical text processing using BioBERT.
+* Named Entity Recognition (NER).
+* Drug and adverse event extraction.
+* Automated knowledge synthesis.
+
+---
+
+# System Architecture
+
+```text
+                    ┌─────────────────────┐
+                    │     React Frontend  │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │ Spring Boot Backend │
+                    └──────────┬──────────┘
+                               │
+               ┌───────────────┼───────────────┐
+               │                               │
+               ▼                               ▼
+    ┌───────────────────┐          ┌───────────────────┐
+    │ PostgreSQL DB     │          │ Python AI Engine  │
+    └───────────────────┘          └─────────┬─────────┘
+                                              │
+                                              ▼
+                               ┌─────────────────────────┐
+                               │ BioBERT NLP Processing │
+                               └─────────┬──────────────┘
+                                         │
+                                         ▼
+                               ┌─────────────────────────┐
+                               │ Biomedical Literature   │
+                               │ (PubMed / Research Data)│
+                               └─────────────────────────┘
 ```
-pharmawatch/
-├── backend/                  # Spring Boot REST API
-│   ├── src/main/java/com/pharmawatch/
-│   │   ├── config/           # Security, CORS, exception handler
-│   │   ├── controller/       # Auth, Dashboard REST endpoints
-│   │   ├── dto/              # Request/Response DTOs
-│   │   ├── entity/           # JPA entities (User, Company, Alert, Drug)
-│   │   ├── repository/       # Spring Data JPA repos
-│   │   ├── security/         # JWT filter + utility
-│   │   └── service/          # Business logic
-│   ├── Dockerfile
-│   └── pom.xml
+
+---
+
+# Methodology
+
+### Step 1: Drug Watchlist Creation
+
+Users create and manage a watchlist containing drugs they wish to monitor.
+
+### Step 2: Research Collection
+
+The system gathers newly published biomedical literature relevant to tracked drugs.
+
+### Step 3: Text Processing
+
+Research abstracts and article content are processed using NLP techniques.
+
+### Step 4: Information Extraction
+
+BioBERT identifies:
+
+* Drug names
+* Side effects
+* Adverse reactions
+* Biomedical entities
+
+### Step 5: Knowledge Synthesis
+
+Extracted findings are structured and stored within PostgreSQL.
+
+### Step 6: Alert Generation
+
+The system detects significant changes and generates actionable alerts.
+
+### Step 7: Visualization
+
+Insights are presented through dashboards, charts, and analytical views.
+
+---
+
+# Technology Stack
+
+## Frontend
+
+* React.js
+* React Router
+* Recharts
+* Axios
+* Tailwind CSS
+
+## Backend
+
+* Java Spring Boot
+* Spring Security
+* Spring Data JPA
+* REST APIs
+
+## Database
+
+* PostgreSQL
+
+## AI & NLP
+
+* Python
+* BioBERT
+* Hugging Face Transformers
+* Pandas
+* NumPy
+
+## Development Tools
+
+* Git
+* GitHub
+* Docker
+
+---
+
+# Project Structure
+
+```text
+PHARMAWATCH/
 │
-├── frontend/                 # React SPA
-│   ├── src/
-│   │   ├── components/       # AlertCard, MetricCard, Chart, Layout
-│   │   ├── hooks/            # useAuth context
-│   │   ├── pages/            # Login, Register, ForgotPassword, Dashboard
-│   │   ├── services/         # Axios API client
-│   │   └── styles/           # Global CSS variables
-│   ├── Dockerfile
-│   ├── nginx.conf
-│   └── package.json
-│
-├── ai-engine/                # Python nightly scanner
-│   ├── scan.py               # PubMed → BioBERT → DB pipeline
-│   └── requirements.txt
-│
-├── .github/workflows/        # GitHub Actions CI/CD + nightly cron
-├── docker-compose.yml        # Full stack (prod-like)
-├── docker-compose.dev.yml    # Dev override with hot reload
-├── .env.example              # Copy to .env and fill in
+├── frontend/
+├── backend/
+├── ai-engine/
+├── .env
+├── .env.example
+├── docker-compose.yml
+├── docker-compose.dev.yml
 └── README.md
 ```
 
 ---
 
-## Prerequisites
+# Screenshots
 
-Install these before starting:
+## Login Page
 
-- **Docker Desktop** — https://www.docker.com/products/docker-desktop
-- **Git** — https://git-scm.com
-- **Node.js 20+** (only needed for local frontend dev) — https://nodejs.org
-- **Java 17+** (only needed for local backend dev) — https://adoptium.net
-- **Maven 3.9+** (only needed for local backend dev) — https://maven.apache.org
+![Login Page](screenshots/login.png)
 
 ---
 
-## Option A — Run Everything with Docker (Recommended)
+## Registration Page
 
-This is the easiest path. One command starts the database, backend, and frontend.
+![Registration Page](screenshots/registration.png)
 
-### Step 1 — Clone the repository
+---
+
+## Main Dashboard
+
+![Dashboard](screenshots/dashboard.png)
+
+---
+
+## Alert Details (Deep Dive Panel)
+
+![Deep Dive Panel](screenshots/deepdive.png)
+
+---
+
+## Watchlist Manager
+
+![Watchlist Manager](screenshots/watchlist.png)
+
+---
+
+## Global Search
+
+![Global Search](screenshots/globalsearch.png)
+
+---
+
+# Installation
+
+## Clone the Repository
 
 ```bash
-git clone https://github.com/your-org/pharmawatch.git
+git clone https://github.com/your-username/pharmawatch.git
 cd pharmawatch
 ```
 
-### Step 2 — Configure environment
-
-```bash
-cp .env.example .env
-```
-
-Open `.env` and fill in:
-- `JWT_SECRET` — any random 64+ character string (run `openssl rand -base64 48` to generate one)
-- `MAIL_USERNAME` / `MAIL_PASSWORD` — your Gmail + App Password (see Gmail setup below)
-- Leave `DATABASE_URL`, `DATABASE_USERNAME`, `DATABASE_PASSWORD` as-is for local Docker
-
-**Gmail App Password setup:**
-1. Go to https://myaccount.google.com/security
-2. Enable 2-Step Verification
-3. Go to https://myaccount.google.com/apppasswords
-4. Create an app password for "Mail"
-5. Paste the 16-character password into `MAIL_PASSWORD`
-
-> Forgot password emails won't crash the app if mail is misconfigured — they just log a warning.
-
-### Step 3 — Start all services
-
-```bash
-docker-compose up --build
-```
-
-First build takes ~3–5 minutes (Maven + npm downloads). Subsequent starts are fast.
-
-Wait until you see:
-```
-pharmawatch-backend  | Started PharmaWatchApplication in X.X seconds
-```
-
-### Step 4 — Open the app
-
-| Service   | URL                        |
-|-----------|----------------------------|
-| App (UI)  | http://localhost:80         |
-| API       | http://localhost:8080/api  |
-
-### Step 5 — Register your first account
-
-1. Go to **http://localhost:80**
-2. Click **Create account**
-3. Fill in your details and company name
-4. You're redirected to the dashboard with demo data pre-loaded
-
-### Stop the stack
-
-```bash
-docker-compose down          # Stop containers (keep DB data)
-docker-compose down -v       # Stop + delete all data
-```
-
----
-
-## Option B — Run Locally Without Docker (Dev Mode)
-
-Better for active development with hot reload.
-
-### Step 1 — Start PostgreSQL only via Docker
-
-```bash
-docker-compose up postgres -d
-```
-
-This gives you a clean local Postgres without running the other services in Docker.
-
-### Step 2 — Configure and run the backend
-
-```bash
-cd backend
-```
-
-Create `src/main/resources/application-local.properties`:
-```properties
-spring.datasource.url=jdbc:postgresql://localhost:5432/pharmawatch
-spring.datasource.username=pharmawatch_user
-spring.datasource.password=pharmawatch_dev_pass
-app.jwt.secret=local-dev-secret-key-minimum-256-bits-long-replace-in-prod
-spring.mail.host=smtp.gmail.com
-spring.mail.username=your-email@gmail.com
-spring.mail.password=your-app-password
-app.frontend-url=http://localhost:3000
-app.cors.allowed-origins=http://localhost:3000
-```
-
-Run:
-```bash
-mvn spring-boot:run -Dspring-boot.run.profiles=local
-```
-
-Backend starts at **http://localhost:8080**
-
-### Step 3 — Run the frontend
+## Frontend Setup
 
 ```bash
 cd frontend
-npm install --legacy-peer-deps
+npm install
 npm start
 ```
 
-Frontend starts at **http://localhost:3000**
-
----
-
-## Option C — Supabase (Free Cloud Database)
-
-Replace the local Postgres with Supabase's free tier.
-
-### Step 1 — Create Supabase project
-
-1. Sign up at https://supabase.com (free)
-2. Create a new project
-3. Go to **Settings → Database**
-4. Copy the **Connection string** (URI format)
-
-### Step 2 — Update environment
-
-In `.env` (for Docker) or `application.properties` (for local):
-```
-DATABASE_URL=jdbc:postgresql://db.<your-project-ref>.supabase.co:5432/postgres
-DATABASE_USERNAME=postgres
-DATABASE_PASSWORD=<your-supabase-db-password>
-```
-
-The app uses `spring.jpa.hibernate.ddl-auto=update` so all tables are created automatically on first boot.
-
----
-
-## API Reference
-
-### Authentication Endpoints
-
-| Method | URL                          | Body                                   | Description         |
-|--------|------------------------------|----------------------------------------|---------------------|
-| POST   | `/api/auth/register`         | firstName, lastName, email, password, jobTitle, companyName, companyDomain | Register + auto login |
-| POST   | `/api/auth/login`            | email, password                        | Login               |
-| POST   | `/api/auth/forgot-password`  | email                                  | Send reset link     |
-| POST   | `/api/auth/reset-password`   | token, newPassword                     | Reset password      |
-
-### Dashboard Endpoints (require Bearer token)
-
-| Method | URL                                  | Description              |
-|--------|--------------------------------------|--------------------------|
-| GET    | `/api/dashboard`                     | Get all dashboard data   |
-| PATCH  | `/api/dashboard/alerts/{id}/read`    | Mark alert as read       |
-
-### Example — Register
+## Backend Setup
 
 ```bash
-curl -X POST http://localhost:8080/api/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{
-    "firstName": "Jane",
-    "lastName": "Smith",
-    "email": "jane@acme-pharma.com",
-    "password": "SecurePass123",
-    "jobTitle": "Pharmacovigilance Lead",
-    "companyName": "Acme Pharmaceuticals",
-    "companyDomain": "acme-pharma.com"
-  }'
+cd backend
+mvn clean install
+mvn spring-boot:run
 ```
 
-### Example — Login
+## Database Setup
 
-```bash
-curl -X POST http://localhost:8080/api/localhost:8080/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email": "jane@acme-pharma.com", "password": "SecurePass123"}'
+```sql
+CREATE DATABASE pharmawatch;
 ```
 
-Save the `accessToken` from the response, then use it:
+Configure PostgreSQL in:
 
-```bash
-curl -H "Authorization: Bearer <accessToken>" http://localhost:8080/api/dashboard
+```properties
+application.properties
 ```
 
----
+```properties
+spring.datasource.url=jdbc:postgresql://localhost:5432/pharmawatch
+spring.datasource.username=postgres
+spring.datasource.password=your_password
+```
 
-## Running the AI Scanner Manually
-
-The Python scanner runs automatically every night at 2 AM via GitHub Actions, but you can trigger it locally:
+## AI Engine Setup
 
 ```bash
 cd ai-engine
 pip install -r requirements.txt
-
-# Set env vars
-export DATABASE_URL="jdbc:postgresql://localhost:5432/pharmawatch"
-export HF_API_KEY="hf_your_key"  # from huggingface.co/settings/tokens
-
-python scan.py
-```
-
-Get a free Hugging Face API key at https://huggingface.co/settings/tokens
-
----
-
-## GitHub Actions Setup (CI/CD + Nightly Scan)
-
-### Step 1 — Push to GitHub
-
-```bash
-git remote add origin https://github.com/your-org/pharmawatch.git
-git push -u origin main
-```
-
-### Step 2 — Add GitHub Secrets
-
-Go to **Settings → Secrets and variables → Actions** and add:
-
-| Secret Name         | Value                                    |
-|---------------------|------------------------------------------|
-| `DATABASE_URL`      | Your Supabase JDBC connection string     |
-| `DATABASE_USERNAME` | postgres                                 |
-| `DATABASE_PASSWORD` | Your Supabase DB password                |
-| `JWT_SECRET`        | Your 64-char random string               |
-| `HF_API_KEY`        | Your Hugging Face API token              |
-| `PUBMED_API_KEY`    | PubMed API key (optional)                |
-| `REACT_APP_API_URL` | https://your-backend-domain.com/api      |
-
-### Step 3 — Actions run automatically
-
-- **On every push** → tests run + Docker images built
-- **Every night at 2 AM UTC** → `scan.py` runs, new alerts appear in dashboard
-
----
-
-## Common Issues & Fixes
-
-### "Connection refused" on backend start
-The backend tries to connect to PostgreSQL immediately. Make sure Postgres is running:
-```bash
-docker-compose up postgres -d
-# Wait 10 seconds, then start backend
-```
-
-### CORS errors in browser
-Make sure `CORS_ORIGINS` in `.env` includes the exact URL you're accessing from (including port).
-
-### "Invalid or expired reset token"
-Password reset tokens expire after 1 hour. Request a new one.
-
-### Frontend shows blank page after login
-Check browser console. Usually means `REACT_APP_API_URL` is wrong in `.env`.
-For Docker: it should be `http://localhost:8080/api`
-For production: it should be your actual backend URL.
-
-### "Email already registered" on register
-The email is taken. Use a different email or log in instead.
-
-### Maven build fails (Java version)
-Make sure Java 17+ is installed:
-```bash
-java -version  # should show 17 or higher
+python main.py
 ```
 
 ---
 
-## Production Deployment Checklist
+# Author
 
-- [ ] Set a strong random `JWT_SECRET` (min 64 chars)
-- [ ] Use Supabase or managed PostgreSQL (not local Docker)
-- [ ] Configure real SMTP credentials
-- [ ] Set `CORS_ORIGINS` to your actual frontend domain
-- [ ] Set `FRONTEND_URL` to your actual frontend URL
-- [ ] Enable HTTPS (via reverse proxy like Nginx or Cloudflare)
-- [ ] Set `spring.jpa.hibernate.ddl-auto=validate` in production
-- [ ] Add GitHub secrets for the nightly scan workflow
-
----
-
-## License
-
-MIT — see LICENSE file.
+**Saina Hamid**

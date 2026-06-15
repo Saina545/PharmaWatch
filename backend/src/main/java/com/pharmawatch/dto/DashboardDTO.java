@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Data
 @Builder
@@ -42,6 +43,7 @@ public class DashboardDTO {
         private double spikePercentage;
         private String severity;
         private boolean read;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
         private LocalDateTime createdAt;
         private List<PaperDTO> papers;
     }

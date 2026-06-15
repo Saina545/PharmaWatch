@@ -34,7 +34,7 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final UserDetailsService userDetailsService;
 
-    @Bean
+   @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(AbstractHttpConfigurer::disable)
@@ -43,7 +43,7 @@ public class SecurityConfig {
                 .requestMatchers(
                     "/api/auth/**",
                     "/api/public/**",
-                    "/actuator/health"
+                    "/actuator/**" // <--- Add this line!
                 ).permitAll()
                 .anyRequest().authenticated()
             )
