@@ -83,6 +83,14 @@ The project demonstrates how AI-powered biomedical information extraction and au
 * Search across biomedical intelligence records.
 * Query by drug name.
 
+### Automated Nightly Monitoring
+
+* Scheduled biomedical literature surveillance.
+* Automated PubMed scanning using GitHub Actions.
+* BioBERT-based adverse-event extraction.
+* Continuous dashboard updates through automated alert generation.
+
+
 ### AI-Powered Information Extraction
 
 * Biomedical text processing using BioBERT.
@@ -124,6 +132,21 @@ The project demonstrates how AI-powered biomedical information extraction and au
 ```
 
 ---
+
+
+# Automated CI/CD Pipeline
+
+PharmaWatch includes an automated CI/CD pipeline built with GitHub Actions.
+
+The pipeline:
+
+* Validates backend and frontend builds.
+* Builds Docker images for deployment.
+* Executes a scheduled nightly biomedical literature scan.
+* Processes PubMed abstracts using BioBERT-based NER.
+* Generates alerts and updates dashboard intelligence automatically.
+
+This enables continuous monitoring without manual intervention.
 
 # Methodology
 
@@ -199,6 +222,7 @@ Insights are presented through dashboards, charts, alert feeds, and detailed inv
 * Docker Compose
 * GitHub Actions
 * Git
+* CI/CD Automation 
 
 ---
 
