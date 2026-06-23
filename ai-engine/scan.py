@@ -11,14 +11,14 @@ import logging
 import requests
 import psycopg2
 from datetime import datetime, timedelta
-from transformers import pipeline
+from dotenv import load_dotenv # <--- ADD THIS
+load_dotenv()
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
 log = logging.getLogger(__name__)
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
 HF_API_KEY   = os.environ.get("HF_API_KEY", "")
-# PUBMED_KEY   = os.environ.get("PUBMED_API_KEY", "") # Disabled for anonymous testing
 
 PUBMED_SEARCH = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
 PUBMED_FETCH  = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
@@ -59,7 +59,6 @@ def get_watchlist(conn):
 def search_pubmed(drug_name: str, days_back: int = 1) -> list:
     since = (datetime.now() - timedelta(days=days_back)).strftime("%Y/%m/%d")
     
-    # Removed API Key for anonymous access
     params = {
         "db": "pubmed", "term": f"{drug_name}[Title/Abstract] AND adverse[Title/Abstract]",
         "reldate": days_back, "datetype": "pdat",
@@ -91,17 +90,13 @@ def fetch_abstracts(pmids: list) -> list:
         papers = []
         import re
         
-        # We need to loop through each PMID to try and match it with a title/abstract
         for pmid in pmids:
-            # Very basic regex to pull out an article block (PubMed XML can be messy)
-            # This is a simplified fallback to ensure we get SOMETHING for the UI
             abstract_match = re.search(f'<PMID[^>]*>{pmid}</PMID>.*?<AbstractText[^>]*>(.*?)</AbstractText>', text, re.DOTALL)
             title_match = re.search(f'<PMID[^>]*>{pmid}</PMID>.*?<ArticleTitle[^>]*>(.*?)</ArticleTitle>', text, re.DOTALL)
             
             abstract_text = abstract_match.group(1).strip() if abstract_match else ""
             title_text = title_match.group(1).strip() if title_match else f"PubMed Article {pmid}"
             
-            # Use abstract if available, else title for AI scanning
             scan_text = abstract_text if abstract_text else title_text
             
             papers.append({
@@ -109,7 +104,7 @@ def fetch_abstracts(pmids: list) -> list:
                 "title": title_text,
                 "abstractSnippet": abstract_text[:200] + "..." if abstract_text else "",
                 "scan_text": scan_text,
-                "journal": "PubMed", # Mock journal for now
+                "journal": "PubMed", 
                 "pubYear": datetime.now().year
             })
                 
@@ -119,9 +114,10 @@ def fetch_abstracts(pmids: list) -> list:
         log.warning(f"  Fetch abstracts failed: {e}")
         return []
 
+
 def extract_side_effects_hf(text: str, drug_name: str) -> list:
-    """Use Hugging Face Inference API (BioBERT NER) to extract medical entities."""
-    API_URL = "https://api-inference.huggingface.co/models/allenai/scibert_scivocab_uncased"
+    """Use Hugging Face Inference API for true BioBERT NER to extract adverse events."""
+    API_URL = "https://api-inference.huggingface.co/models/alvaroalon2/biobert_diseases_ner"
     headers = {"Authorization": f"Bearer {HF_API_KEY}"}
     try:
         r = requests.post(API_URL, headers=headers, json={"inputs": text[:512]}, timeout=30)
@@ -129,10 +125,24 @@ def extract_side_effects_hf(text: str, drug_name: str) -> list:
             entities = r.json()
             side_effects = []
             for e in (entities if isinstance(entities, list) else []):
-                word = e.get("word", "").lower()
-                if any(k in word for k in SEVERITY_RULES.keys()):
-                    side_effects.append(word)
+                # Check both common formatting variations from the Inference API
+                label = e.get("entity_group", "") or e.get("entity", "")
+                
+                if "DISEASE" in label:
+                    word = e.get("word", "").lower().strip()
+                    
+                    # Skip sub-word token pieces to prevent malformed string logic
+                    if word.startswith("##"):
+                        continue
+                    
+                    # Normalization Fix: Map extracted token fragments to known severity keys
+                    for keyword in SEVERITY_RULES.keys():
+                        if keyword in word:
+                            side_effects.append(keyword)
+                            
             return list(set(side_effects))
+        else:
+            log.warning(f"  HF API returned status {r.status_code}: {r.text}")
     except Exception as e:
         log.warning(f"  HF API call failed: {e}")
 
@@ -143,14 +153,6 @@ def extract_side_effects_hf(text: str, drug_name: str) -> list:
         if keyword in text_lower:
             found.append(keyword)
             
-    # --- TESTING OVERRIDE ---
-    # If HF fails and no keywords match, force a signal so the dashboard populates!
-    if len(found) == 0:
-        if "lipitor" in drug_name.lower() or "atorvastatin" in drug_name.lower():
-            found.append("myopathy")
-        else:
-            found.append("nausea")
-    # ------------------------
 
     return found
 
@@ -165,7 +167,7 @@ def classify_severity(side_effect: str) -> str:
 def upsert_alert(conn, company_id: int, drug_name: str, side_effect: str,
                  paper_count: int, spike_pct: float, severity: str, summary: str, papers: list):
     with conn.cursor() as cur:
-        # 1. Insert the main Alert and GET the new ID back using RETURNING id
+        # 1. Insert the main Alert
         cur.execute("""
             INSERT INTO alerts
               (drug_name, side_effect, summary, paper_count, spike_percentage,
@@ -174,12 +176,11 @@ def upsert_alert(conn, company_id: int, drug_name: str, side_effect: str,
             RETURNING id
         """, (drug_name, side_effect.title(), summary, paper_count, spike_pct, severity, company_id))
         
-        # Grab the newly created Alert ID
         alert_id = cur.fetchone()[0]
-# 2. Insert the Evidence! Link each paper to the new alert_id
-        valid_index = 0 # Java needs continuous 0-based indexing
+
+        # 2. Insert the Evidence
+        valid_index = 0 
         for p in papers:
-            # SAFEGUARD: Only insert if the paper exists and actually has a PubMed ID
             if p and p.get('pmid'):
                 cur.execute("""
                     INSERT INTO alert_papers 
@@ -193,9 +194,10 @@ def upsert_alert(conn, company_id: int, drug_name: str, side_effect: str,
                     p.get('pubYear', ''), 
                     p.get('abstractSnippet', ''), 
                     f"https://pubmed.ncbi.nlm.nih.gov/{p['pmid']}/",
-                    valid_index  # This assigns 0, 1, 2... without any gaps
+                    valid_index  
                 ))
-                valid_index += 1 # Only increment if successfully saved
+                valid_index += 1 
+
         # 3. Update the Watchlist Stats
         cur.execute("""
             UPDATE watchlist
@@ -231,7 +233,6 @@ def main():
         for drug_name, company_id in drugs:
             log.info(f"\nScanning: {drug_name} (company_id={company_id})")
             
-            # Adjusted to 365 to ensure it finds some data for older drugs!
             pmids = search_pubmed(drug_name, days_back=365) 
             if not pmids:
                 log.info("  No new papers found.")
@@ -243,7 +244,7 @@ def main():
                 effects = extract_side_effects_hf(paper["scan_text"], drug_name)
                 all_effects.extend(effects)
 
-            # Aggregate
+            # Aggregate alerts
             from collections import Counter
             effect_counts = Counter(all_effects)
             for effect, count in effect_counts.most_common(3):
@@ -257,7 +258,6 @@ def main():
                     f"Signal spike: +{spike}%. Review recommended."
                 )
                 
-                # IMPORTANT: Pass papers_list to the upsert function!
                 upsert_alert(conn, company_id, drug_name, effect,
                              len(pmids), spike, severity, summary, papers_list)
 
@@ -268,4 +268,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    

@@ -1,27 +1,26 @@
-# PharmaWatch – Automated Biomedical Intelligence Platform
+# PharmaWatch – AI-Powered Pharmacovigilance & Biomedical Intelligence Platform
 
 ## Overview
 
-PharmaWatch is an AI-powered biomedical intelligence platform designed for pharmaceutical companies to continuously monitor drug-related research and emerging safety signals.
+PharmaWatch is a B2B pharmacovigilance and biomedical intelligence platform designed for pharmaceutical companies, biomedical researchers, and drug safety teams to continuously monitor emerging research and drug-safety signals.
 
-Every day, thousands of clinical and biomedical research papers are published across journals and repositories. Manually reviewing this volume of literature is time-consuming, expensive, and often results in important findings being overlooked.
+Every day, thousands of biomedical and clinical research papers are published across journals and repositories. Manually reviewing this volume of literature is time-consuming, expensive, and often results in important findings being overlooked.
 
-PharmaWatch automates the process of collecting, analyzing, and synthesizing biomedical research. Using Natural Language Processing (NLP) and BioBERT-based AI models, the system identifies drug mentions, extracts reported side effects, and generates actionable insights through an interactive dashboard.
+PharmaWatch automates the process of collecting, analyzing, and synthesizing biomedical research. Using Natural Language Processing (NLP) and BioBERT-based Named Entity Recognition (NER), the system identifies adverse-event signals from biomedical literature and generates actionable insights through an interactive dashboard.
 
-Instead of manually reading hundreds of research papers, pharmaceutical companies can maintain a customized watchlist of drugs and receive prioritized alerts, helping them identify emerging safety concerns, monitor competitor drugs, and make evidence-based decisions faster.
+Instead of manually reviewing hundreds of research papers, organizations can maintain customized drug watchlists and receive prioritized alerts backed by scientific evidence, helping them identify emerging safety concerns and make evidence-based decisions faster.
 
 ---
 
 # Problem Statement
 
-Pharmaceutical organizations face a significant challenge in monitoring newly published biomedical literature.
+Pharmaceutical companies, biomedical researchers, and pharmacovigilance teams face a significant challenge in monitoring newly published biomedical literature.
 
-Thousands of research papers are published every week, making it nearly impossible for safety teams and researchers to manually review every publication. As a result:
+Thousands of research papers are published every week, making it nearly impossible to manually review every publication. As a result:
 
 * Critical adverse drug reactions may go unnoticed.
 * Newly discovered side effects can remain buried within unstructured text.
 * Pharmacovigilance teams spend excessive time reviewing literature manually.
-* Competitor drug developments can be overlooked.
 * Regulatory and compliance risks increase.
 * Valuable scientific evidence remains underutilized.
 
@@ -31,18 +30,17 @@ An automated system is required to continuously monitor biomedical publications,
 
 # Motivation
 
-The motivation behind PharmaWatch is to help pharmaceutical companies transform overwhelming volumes of biomedical research into actionable intelligence.
+The motivation behind PharmaWatch is to help pharmaceutical organizations transform overwhelming volumes of biomedical research into actionable intelligence.
 
 By leveraging Artificial Intelligence and Biomedical NLP, organizations can:
 
 * Monitor drug safety trends automatically.
 * Detect emerging adverse effects earlier.
-* Track competitor drugs and related research.
 * Reduce manual literature review efforts.
 * Improve pharmacovigilance workflows.
-* Support faster, data-driven business decisions.
+* Support faster, data-driven decision making.
 
-The project demonstrates how AI-powered knowledge synthesis can improve the efficiency of modern pharmaceutical research and safety monitoring operations.
+The project demonstrates how AI-powered biomedical information extraction and automated alert generation can improve the efficiency of modern drug-safety monitoring operations.
 
 ---
 
@@ -50,8 +48,8 @@ The project demonstrates how AI-powered knowledge synthesis can improve the effi
 
 ### Secure Authentication
 
-* Corporate user login and registration system.
-* Secure authentication and authorization.
+* Corporate user login and registration.
+* JWT-based authentication and authorization.
 * Company-specific data isolation.
 
 ### Smart Dashboard
@@ -65,35 +63,33 @@ The project demonstrates how AI-powered knowledge synthesis can improve the effi
 
 * Prioritized list of significant findings.
 * Detection of unusual side-effect trends.
-* Daily updates based on newly processed research.
+* Automated alert generation from biomedical literature.
 
 ### Deep-Dive Analysis Panel
 
 * Detailed investigation view for each alert.
 * Historical side-effect trend visualization.
 * Evidence-backed research summaries.
-* Direct access to original biomedical publications.
+* Direct access to original PubMed publications.
 
 ### Portfolio Watchlist Management
 
 * Add new drugs to monitor.
 * Remove existing drugs.
 * Manage company-specific tracking portfolios.
-* Monitor competitor medications.
 
 ### Global Search System
 
-* Search across all historical biomedical data.
+* Search across biomedical intelligence records.
 * Query by drug name.
-* Query by side effect.
-* Apply date-based filtering.
 
 ### AI-Powered Information Extraction
 
 * Biomedical text processing using BioBERT.
 * Named Entity Recognition (NER).
-* Drug and adverse event extraction.
-* Automated knowledge synthesis.
+* Adverse-event and disease entity extraction.
+* Automated biomedical signal aggregation.
+* Alert synthesis from biomedical literature.
 
 ---
 
@@ -101,7 +97,7 @@ The project demonstrates how AI-powered knowledge synthesis can improve the effi
 
 ```text
                     ┌─────────────────────┐
-                    │     React Frontend  │
+                    │    React Frontend   │
                     └──────────┬──────────┘
                                │
                                ▼
@@ -113,18 +109,17 @@ The project demonstrates how AI-powered knowledge synthesis can improve the effi
                │                               │
                ▼                               ▼
     ┌───────────────────┐          ┌───────────────────┐
-    │ PostgreSQL DB     │          │ Python AI Engine  │
+    │   PostgreSQL DB   │          │  Python AI Engine │
     └───────────────────┘          └─────────┬─────────┘
                                               │
                                               ▼
                                ┌─────────────────────────┐
-                               │ BioBERT NLP Processing │
+                               │   BioBERT NER Engine    │
                                └─────────┬──────────────┘
                                          │
                                          ▼
                                ┌─────────────────────────┐
-                               │ Biomedical Literature   │
-                               │ (PubMed / Research Data)│
+                               │ PubMed Biomedical Data  │
                                └─────────────────────────┘
 ```
 
@@ -136,34 +131,34 @@ The project demonstrates how AI-powered knowledge synthesis can improve the effi
 
 Users create and manage a watchlist containing drugs they wish to monitor.
 
-### Step 2: Research Collection
+### Step 2: Biomedical Literature Collection
 
-The system gathers newly published biomedical literature relevant to tracked drugs.
+The system continuously gathers relevant PubMed publications associated with tracked drugs.
 
 ### Step 3: Text Processing
 
-Research abstracts and article content are processed using NLP techniques.
+Research abstracts are extracted and prepared for NLP analysis.
 
 ### Step 4: Information Extraction
 
-BioBERT identifies:
+BioBERT-based NER identifies:
 
-* Drug names
-* Side effects
+* Disease entities
 * Adverse reactions
-* Biomedical entities
+* Side-effect signals
+* Biomedical concepts from research abstracts
 
-### Step 5: Knowledge Synthesis
+### Step 5: Signal Aggregation
 
-Extracted findings are structured and stored within PostgreSQL.
+Extracted entities are aggregated and mapped to severity categories.
 
 ### Step 6: Alert Generation
 
-The system detects significant changes and generates actionable alerts.
+The system detects significant safety signals and generates evidence-backed alerts.
 
 ### Step 7: Visualization
 
-Insights are presented through dashboards, charts, and analytical views.
+Insights are presented through dashboards, charts, alert feeds, and detailed investigation panels.
 
 ---
 
@@ -173,9 +168,8 @@ Insights are presented through dashboards, charts, and analytical views.
 
 * React.js
 * React Router
-* Recharts
 * Axios
-* Tailwind CSS
+* CSS3
 
 ## Backend
 
@@ -183,6 +177,7 @@ Insights are presented through dashboards, charts, and analytical views.
 * Spring Security
 * Spring Data JPA
 * REST APIs
+* JWT Authentication
 
 ## Database
 
@@ -192,15 +187,18 @@ Insights are presented through dashboards, charts, and analytical views.
 
 * Python
 * BioBERT
-* Hugging Face Transformers
-* Pandas
-* NumPy
+* Hugging Face Inference API
+* Named Entity Recognition (NER)
+* PubMed API
+* Requests
+* psycopg2
 
-## Development Tools
+## DevOps & Infrastructure
 
-* Git
-* GitHub
 * Docker
+* Docker Compose
+* GitHub Actions
+* Git
 
 ---
 
@@ -212,10 +210,8 @@ PHARMAWATCH/
 ├── frontend/
 ├── backend/
 ├── ai-engine/
-├── .env
-├── .env.example
 ├── docker-compose.yml
-├── docker-compose.dev.yml
+├── .github/workflows/
 └── README.md
 ```
 
@@ -259,58 +255,38 @@ PHARMAWATCH/
 
 ---
 
-# Installation
+# Running the Application
 
-## Clone the Repository
+## Clone Repository
 
 ```bash
 git clone https://github.com/your-username/pharmawatch.git
 cd pharmawatch
 ```
 
-## Frontend Setup
+## Start Complete Application Stack
 
 ```bash
-cd frontend
-npm install
-npm start
+docker compose up --build
 ```
 
-## Backend Setup
+Docker Compose automatically:
 
-```bash
-cd backend
-mvn clean install
-mvn spring-boot:run
+* Builds the Spring Boot backend image.
+* Builds the React frontend image.
+* Creates the PostgreSQL database container.
+* Configures networking between services.
+* Starts the complete PharmaWatch stack.
+
+## Access Application
+
+```text
+Frontend  : http://localhost
+Backend   : http://localhost:8080
+Database  : localhost:5433
 ```
 
-## Database Setup
 
-```sql
-CREATE DATABASE pharmawatch;
-```
-
-Configure PostgreSQL in:
-
-```properties
-application.properties
-```
-
-```properties
-spring.datasource.url=jdbc:postgresql://localhost:5432/pharmawatch
-spring.datasource.username=postgres
-spring.datasource.password=your_password
-```
-
-## AI Engine Setup
-
-```bash
-cd ai-engine
-pip install -r requirements.txt
-python main.py
-```
-
----
 
 # Author
 
